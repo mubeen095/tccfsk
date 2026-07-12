@@ -17,6 +17,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@thecodingco" />
     <meta name="twitter:image" content="/VS%20IG%20POSTS%20(YouTube%20Thumbnail)%20(1).png" />
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/tcc-apple-touch.png" />
@@ -122,6 +123,30 @@
         });
       });
       observer.observe(document.documentElement, { childList: true, subtree: true });
+    })();
+    </script>
+    <script>
+    (function() {
+      function initHls(video) {
+        if (video.__hlsInitialized) return;
+        var source = video.querySelector('source[type="application/x-mpegURL"]');
+        if (!source || !source.src) return;
+        if (video.canPlayType('application/vnd.apple.mpegurl')) {
+          video.src = source.src;
+          return;
+        }
+        if (window.Hls && Hls.isSupported()) {
+          var hls = new Hls();
+          hls.loadSource(source.src);
+          hls.attachMedia(video);
+          video.__hlsInitialized = true;
+        }
+      }
+      var observer = new MutationObserver(function() {
+        document.querySelectorAll('video').forEach(initHls);
+      });
+      observer.observe(document.documentElement, { childList: true, subtree: true });
+      document.querySelectorAll('video').forEach(initHls);
     })();
     </script>
   </body>
