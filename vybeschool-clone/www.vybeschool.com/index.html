@@ -17,7 +17,6 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@thecodingco" />
     <meta name="twitter:image" content="/VS%20IG%20POSTS%20(YouTube%20Thumbnail)%20(1).png" />
-    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" sizes="96x96" href="/favicon.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/tcc-apple-touch.png" />
@@ -123,41 +122,6 @@
         });
       });
       observer.observe(document.documentElement, { childList: true, subtree: true });
-    })();
-    </script>
-    <script>
-    (function() {
-      function initHls(video) {
-        if (video.__hlsInitialized) return;
-        var src = video.src || video.getAttribute('src');
-        if (!src || (typeof src !== 'string') || !src.includes('.m3u8')) return;
-        var canPlayNative = video.canPlayType('application/vnd.apple.mpegurl');
-        if (canPlayNative === 'probably' || canPlayNative === 'maybe') {
-          video.__hlsInitialized = true;
-          video.play()['catch'](function(){});
-          return;
-        }
-        if (window.Hls && Hls.isSupported()) {
-          video.removeAttribute('src');
-          video.src = '';
-          var hls = new Hls();
-          hls.loadSource(src);
-          hls.attachMedia(video);
-          video.__hlsInitialized = true;
-          hls.on(Hls.Events.MANIFEST_PARSED, function() {
-            video.play()['catch'](function(){});
-          });
-        }
-      }
-      function scanVideos() {
-        document.querySelectorAll('video').forEach(initHls);
-      }
-      var observer = new MutationObserver(scanVideos);
-      observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
-      if (document.readyState === 'loading')
-        document.addEventListener('DOMContentLoaded', scanVideos);
-      else
-        scanVideos();
     })();
     </script>
   </body>
