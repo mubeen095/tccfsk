@@ -129,24 +129,35 @@
     (function() {
       function initHls(video) {
         if (video.__hlsInitialized) return;
-        var source = video.querySelector('source[type="application/x-mpegURL"]');
-        if (!source || !source.src) return;
-        if (video.canPlayType('application/vnd.apple.mpegurl')) {
-          video.src = source.src;
+        var src = video.src || video.getAttribute('src');
+        if (!src || (typeof src !== 'string') || !src.includes('.m3u8')) return;
+        var canPlayNative = video.canPlayType('application/vnd.apple.mpegurl');
+        if (canPlayNative === 'probably' || canPlayNative === 'maybe') {
+          video.__hlsInitialized = true;
+          video.play()['catch'](function(){});
           return;
         }
         if (window.Hls && Hls.isSupported()) {
+          video.removeAttribute('src');
+          video.src = '';
           var hls = new Hls();
-          hls.loadSource(source.src);
+          hls.loadSource(src);
           hls.attachMedia(video);
           video.__hlsInitialized = true;
+          hls.on(Hls.Events.MANIFEST_PARSED, function() {
+            video.play()['catch'](function(){});
+          });
         }
       }
-      var observer = new MutationObserver(function() {
+      function scanVideos() {
         document.querySelectorAll('video').forEach(initHls);
-      });
-      observer.observe(document.documentElement, { childList: true, subtree: true });
-      document.querySelectorAll('video').forEach(initHls);
+      }
+      var observer = new MutationObserver(scanVideos);
+      observer.observe(document.documentElement, { childList: true, subtree: true, attributes: true });
+      if (document.readyState === 'loading')
+        document.addEventListener('DOMContentLoaded', scanVideos);
+      else
+        scanVideos();
     })();
     </script>
   </body>
